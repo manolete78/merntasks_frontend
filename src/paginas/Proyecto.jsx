@@ -30,6 +30,7 @@ const Proyecto = () => {
     }, [])
 
     useEffect(() => {
+        //Socket IO
         socket.on('tarea agregada', tareaNueva => {
             if (tareaNueva.proyecto === proyecto._id) {
                 submitTareasProyecto(tareaNueva)

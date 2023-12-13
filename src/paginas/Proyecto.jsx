@@ -30,11 +30,6 @@ const Proyecto = () => {
     }, [])
 
     useEffect(() => {
-        const unSub = () => {
-            socket.emit('close project', params.id);
-            socket.off();
-        };
-
         socket.on('tarea agregada', tareaNueva => {
             if (tareaNueva.proyecto === proyecto._id) {
                 submitTareasProyecto(tareaNueva)
@@ -58,8 +53,6 @@ const Proyecto = () => {
                 cambiarEstadoTarea(nuevoEstadoTarea)
             }
         })
-
-        return unSub;
     })
 
     const {nombre} = proyecto

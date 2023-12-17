@@ -24,17 +24,17 @@ const Header = () => {
                 <div className="flex flex-col md:flex-row items-center gap-4">
                     <button
                         type="button"
-                        className="font-bold uppercase"
+                        className="font-bold uppercase hover:text-gray-500 transition-colors"
                         onClick={handleBuscador}
                     >Buscar Proyecto</button>
                     <Link
                         to="/proyectos"
-                        className="font-bold uppercase"
+                        className="font-bold uppercase hover:text-gray-500 transition-colors"
                     >Proyectos</Link>
 
                     <button
                         type="button"
-                        className="text-white text-sm bg-sky-600 p-3 rounded-md uppercase font-bold"
+                        className="text-white text-sm bg-sky-600 hover:bg-sky-700 transition-colors p-3 rounded-md uppercase font-bold"
                         onClick={handleCerrarSesion}
                     >Cerrar Sesión</button>
 

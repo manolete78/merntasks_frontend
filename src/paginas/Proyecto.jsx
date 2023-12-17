@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import useProyectos from '../hooks/useProyectos';
 import useAdmin from '../hooks/useAdmin';
@@ -19,6 +19,19 @@ const Proyecto = () => {
     const {obtenerProyecto, proyecto, cargando, handleModalTarea, alerta, submitTareasProyecto, eliminarTareaProyecto, actualizarTareaProyecto, cambiarEstadoTarea} = useProyectos()
 
     const admin = useAdmin()
+
+    const [filtroTareas, setFiltroTareas] = useState('');
+
+    const tareasFiltradas = () => {
+        if (filtroTareas === '') {
+            return proyecto.tareas || [];
+        } else if (filtroTareas === 'Completadas') {
+            return (proyecto.tareas || []).filter(tarea => tarea.estado);
+        } else if (filtroTareas === 'Incompletas') {
+            return (proyecto.tareas || []).filter(tarea => !tarea.estado);
+        }
+        return [];
+    };
 
     useEffect(() => {
         obtenerProyecto(params.id)
@@ -56,7 +69,7 @@ const Proyecto = () => {
         })
     })
 
-    const {nombre} = proyecto
+    const {nombre, descripcion} = proyecto
 
     if (cargando) return 'Cargando...'
 
@@ -79,6 +92,8 @@ const Proyecto = () => {
                         </div>
                     )}
                 </div>
+
+                <p className='font-medium text-xl mt-3'>{descripcion}</p>
                 
                 {admin && (
                     <button
@@ -95,15 +110,28 @@ const Proyecto = () => {
 
                 <p className='font-bold text-xl mt-10'>Tareas del Proyecto</p>
                 
-                <div className='bg-white shadow mt-10 rounded-lg'>
-                    {proyecto.tareas?.length ? 
-                        proyecto.tareas?.map(tarea => (
+                <div className='flex items-center justify-start mt-5'>
+                    <span>Filtrar por estado:</span>
+                    <select
+                    className='border p-2 rounded-md mx-2'
+                    value={filtroTareas}
+                    onChange={(e) => setFiltroTareas(e.target.value)}
+                    >
+                        <option value=''>Todas</option>
+                        <option value='Completadas'>Completadas</option>
+                        <option value='Incompletas'>Incompletas</option>
+                    </select>
+                </div>
+
+                <div className='bg-white shadow mt-5 rounded-lg'>
+                    {tareasFiltradas().length ? 
+                        tareasFiltradas().map(tarea => (
                             <Tarea
                                 key={tarea._id}
                                 tarea={tarea}
                             />
                         )) : 
-                        <p className='text-center my-5 p-10'>No hay tareas en este proyecto</p>
+                        <p className='text-center my-5 p-10'>No hay tareas disponibles</p>
                     }
                 </div>
 

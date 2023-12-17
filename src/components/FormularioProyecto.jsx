@@ -52,7 +52,7 @@ const FormularioProyecto = () => {
 
     return (
         <form
-            className='bg-white py-10 px-5 md:w-1/2 rounded-lg shadow'
+            className='bg-white py-10 px-5 md:w-3/4 lg:w-2/3 xl:w-1/2 rounded-lg shadow'
             onSubmit={handleSubmit}
         >
             {msg && <Alerta alerta={alerta} />}
@@ -68,6 +68,7 @@ const FormularioProyecto = () => {
                     placeholder='Nombre del Proyecto'
                     value={nombre}
                     onChange={e => setNombre(e.target.value)}
+                    maxLength={50}
                 />
             </div>
 
@@ -82,6 +83,7 @@ const FormularioProyecto = () => {
                     placeholder='Descripción del Proyecto'
                     value={descripcion}
                     onChange={e => setDescripcion(e.target.value)}
+                    maxLength={50}
                 />
             </div>
 
@@ -111,6 +113,7 @@ const FormularioProyecto = () => {
                     placeholder='Nombre del Cliente'
                     value={cliente}
                     onChange={e => setCliente(e.target.value)}
+                    maxLength={50}
                 />
             </div>
 

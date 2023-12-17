@@ -13,10 +13,14 @@ const ModalFormularioTarea = () => {
     const [descripcion, setDescripcion] = useState("")
     const [fechaEntrega, setFechaEntrega] = useState("")
     const [prioridad, setPrioridad] = useState("")
+    const [encargado, setEncargado] = useState("")
+    const [idEncargado, setIdEncargado] = useState("")
 
     const params = useParams()
 
-    const {modalFormularioTarea, handleModalTarea, mostrarAlerta, alerta, submitTarea, tarea} = useProyectos()
+    const {modalFormularioTarea, handleModalTarea, mostrarAlerta, alerta, submitTarea, tarea, proyecto} = useProyectos()
+
+    tarea.proyecto = proyecto._id
 
     useEffect(() => {
         if (tarea?._id) {
@@ -25,6 +29,8 @@ const ModalFormularioTarea = () => {
             setDescripcion(tarea.descripcion)
             setFechaEntrega(tarea.fechaEntrega?.split('T')[0])
             setPrioridad(tarea.prioridad)
+            setIdEncargado(tarea.idEncargado)
+            setEncargado(tarea.encargado)
             return
         }
         setId("")
@@ -32,6 +38,8 @@ const ModalFormularioTarea = () => {
         setDescripcion("")
         setFechaEntrega("")
         setPrioridad("")
+        setIdEncargado("")
+        setEncargado("")
     }, [tarea])
 
     const handleSubmit = async e => {
@@ -45,12 +53,16 @@ const ModalFormularioTarea = () => {
             return
         }
 
-        await submitTarea({id, nombre, descripcion, fechaEntrega, prioridad, proyecto: params.id})
+        console.log(idEncargado);
+
+        await submitTarea({id, nombre, descripcion, fechaEntrega, prioridad, proyecto: params.id, idEncargado, encargado})
 
         setNombre("")
         setDescripcion("")
         setFechaEntrega("")
         setPrioridad("")
+        setIdEncargado("")
+        setEncargado("")
     }
 
     const {msg} = alerta
@@ -125,6 +137,7 @@ const ModalFormularioTarea = () => {
                                                 className='border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md'
                                                 value={nombre}
                                                 onChange={e => setNombre(e.target.value)}
+                                                maxLength={50}
                                             />
                                         </div>
 
@@ -141,6 +154,7 @@ const ModalFormularioTarea = () => {
                                                 className='border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md'
                                                 value={descripcion}
                                                 onChange={e => setDescripcion(e.target.value)}
+                                                maxLength={100}
                                             />
                                         </div>
 
@@ -179,6 +193,32 @@ const ModalFormularioTarea = () => {
                                                 ))}
                                             </select>
                                         </div>
+
+                                        <div className='mb-5'>
+                                            <label
+                                                className='text-gray-700 uppercase font-bold text-sm'
+                                                htmlFor='encargado'
+                                            >
+                                                Encargado de la Tarea
+                                            </label>
+                                            <select
+                                                id='encargado'
+                                                className='border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md'
+                                                value={idEncargado}
+                                                onChange={e => {
+                                                    setEncargado(e.target.options[e.target.selectedIndex].text) // Almacena el nombre de la opción
+                                                    setIdEncargado(e.target.value) // Almacena el ID de la opción
+                                                }}
+                                            >
+                                                <option value="" className='text-red-600'>Sin Encargado</option>
+                                                {proyecto.colaboradores?.length &&
+                                                    proyecto.colaboradores?.map(opcion => (
+                                                        <option key={opcion._id} value={opcion._id}>{opcion.nombre}</option>
+                                                    ))
+                                                }
+                                            </select>
+                                        </div>
+
                                         <input
                                             type="submit"
                                             className='bg-sky-600 hover:bg-sky-700 w-full p-3 text-white uppercase font-bold cursor-pointer transition-colors rounded text-sm'
